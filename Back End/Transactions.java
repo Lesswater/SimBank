@@ -1,12 +1,12 @@
 public class Transactions{
    public void completeTransaction(String[]currentTransaction){}
    
-   public boolean checkIfAccountExists(String account){
-      for(int i = 0 ; i < Shared.validAccounts.length ; i++){
-         if(account.equals(Shared.validAccounts[i])){
-            return true;
-         }
-      }
-      return false;
+   public int getAccountIndex(String account){
+       for(int i=0; i < Shared.masterAccounts.length; i++){
+           if (account.equals(Shared.masterAccounts[i][0])){
+               return i;
+            }
+        }
+        return -1;
    }
 }
