@@ -13,7 +13,7 @@ public class SimBank{
       setUpAccounts(args[0]);
       Shared.transSumName = args[1];
       Commands currentCommand;
-      
+      String currentInput = "";
       do{
          
          currentInput = Shared.input.next();
