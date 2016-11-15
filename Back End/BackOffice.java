@@ -1,16 +1,18 @@
 import java.io.*;
+import java.util.ArrayList;
+import Components.*;
 public class BackOffice{
    public static void main (String[]args){
-       
-      String[]tempMaster = createArrayFromFile(args[0]);
-      String[]tempDaily = createArrayFromFile(args[1]);
-      Shared.masterAccounts = makeTwoDArray(tempMaster,Shared.MASTER_TOKEN_PER_LINE);
-      Shared.dailyTransactions = makeTwoDArray(tempDaily,Shared.TRANS_TOKEN_PER_LINE);
-      
-      //setUpValidAccounts();
-      for(int i = 0 ; i < Shared.dailyTransactions.length ; i++){
-         String[]currentTransactionLine = Shared.dailyTransactions[i];
-        
+      Shared.masterAccounts = createArrayListFromFile(args[0]);
+      Shared.dailyTransactions = createArrayListFromFile(args[1]);
+      int numberOfTransactions = Shared.dailyTransactions.size();
+
+      for(int i = 0 ; i < numberOfTransactions ; i++){
+         String[]currentTransactionLine = Shared.dailyTransactions.get(i);
+         for(int j = 0 ; j < currentTransactionLine.length ; j++){
+            System.out.print(currentTransactionLine[j] + " ");
+         }
+         System.out.println();
          Transactions currentTransaction;
          if(currentTransactionLine[0].equals("DE")){
             currentTransaction = new Deposit();
@@ -32,46 +34,39 @@ public class BackOffice{
             // Fatal error???
          }
       }
-      writeToFile();
+      writeToFile(args[0],"Valid Accounts.txt");
    }
    
-   public static void writeToFile() {
+   public static void writeToFile(String master, String valids) {
        String tempMsg="";
        
        try{
-           FileWriter masterFile = new FileWriter("mastAcc.txt");
-           FileWriter validAccFile = new FileWriter("validAcc.txt");
+           FileWriter masterFile = new FileWriter(master);
+           FileWriter validAccFile = new FileWriter(valids);
            
-           for (int i = 0; i<Shared.masterAccounts.length; i++) {
-               tempMsg=Shared.masterAccounts[i][0]+" "+Shared.masterAccounts[i][1] + " " + Shared.masterAccounts[i][2];
+           for (int i = 0; i<Shared.masterAccounts.size(); i++) {
+               tempMsg=Shared.masterAccounts.get(i)[0] + " " + Shared.masterAccounts.get(i)[1] + " " + Shared.masterAccounts.get(i)[2];
                masterFile.write(tempMsg+"\r\n");
-               validAccFile.write(Shared.masterAccounts[i][0]+"\r\n");
+               validAccFile.write(Shared.masterAccounts.get(i)[0]+"\r\n");
             }
             validAccFile.close();
             masterFile.close();
         }catch (IOException e) {
    		   e.printStackTrace();
-   	   }
-       
-        
+   	  }
     }
-   public static void setUpValidAccounts(){
-      Shared.validAccounts = new String[Shared.masterAccounts.length];
-      for(int i = 0 ; i < ((Shared.masterAccounts.length+1)/3) ; i++){
-         //Shared.validAccounts[i] = Shared.masterAccounts[3*i];
-      }
-   }
    
-   public static String[] createArrayFromFile(String filename){
+   public static ArrayList<String[]> createArrayListFromFile(String filename){
       String currentLine = "";
-      String allTokens = "";
+      ArrayList <String[]> tempList = new ArrayList<String[]>();
       //Reads in each line of a file and appends it to currentLine. To
       //be separated into tokens for easier use
+      
       try {
             FileReader fr = new FileReader(filename);
             BufferedReader br = new BufferedReader(fr);
             while((currentLine = br.readLine()) != null){
-                allTokens += currentLine + " ";
+                tempList.add(Shared.tokenize(currentLine));
             }   
             br.close();
       }catch(FileNotFoundException e){
@@ -79,22 +74,6 @@ public class BackOffice{
       }catch(IOException e) {
          System.out.println(e);
       }
-      return Shared.tokenize(allTokens);
-   }
-   
-   /*This method takes an array and the length of the second dimension and returns a 2 dimensional array.
-    * This is used to turn the arrays of tokens into a more organised form where each
-    * account or transacion is put with their respective information. 
-   */
-   public static String[][] makeTwoDArray (String[] accountArray, int dimension){
-       
-       String[][]newArray= new String[accountArray.length / dimension][dimension];
-       
-       for (int i=0; i<accountArray.length; i++){
-           newArray[i/dimension][i%dimension] = accountArray[i];
-       }
-       
-       return newArray;
-       
+      return tempList;
    }
 }
