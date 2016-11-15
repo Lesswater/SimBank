@@ -2,12 +2,11 @@ package Components;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 public class Shared{
-   
+   /*Stores the information from each line of the master accounts file
+   and Transaction Summary file into two seperate ArrayLists
+   */
    public static ArrayList<String[]> masterAccounts = new ArrayList<>();
    public static ArrayList<String[]> dailyTransactions = new ArrayList<>();
-   
-   public static int MASTER_TOKEN_PER_LINE = 3;
-   public static int TRANS_TOKEN_PER_LINE = 5;
    
    /**   This method will take a space-delimeted String as a parameter
    and return an array where each element is a token of the String

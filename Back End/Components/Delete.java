@@ -1,10 +1,15 @@
 package Components;
 public class Delete extends Transactions{
-   
+   /* Attempts to delete an existing account x where x is the account 
+   number that is given in the parameter provided. If x exists, 
+   and its current balance is 0, and the name given in the transaction 
+   matches the name that is associated with the account in the master 
+   accounts file, it removes the account. Otherwise, prints an 
+   appropriate error message corresponding to the error type.
+   */ 
    public void completeTransaction(String[]currentTransaction){
-       
-      int accountIndex=getAccountIndex(currentTransaction[1]);
-      if(accountIndex>=0){
+      int accountIndex = getAccountIndex(currentTransaction[1]);
+      if(accountIndex >= 0){
          //Check balance of the account to be deleted.
          if (Integer.parseInt(Shared.masterAccounts.get(accountIndex)[1]) == 0){
              //Check to see if the given account name matches the actual account name.
@@ -19,7 +24,7 @@ public class Delete extends Transactions{
          }
       }else{
           System.out.println("Fatal Error: Account number does not exist!");
-          //EXIT!!!!!!!!
+          System.exit(1);
       }
    }
 }
