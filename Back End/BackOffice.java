@@ -1,5 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 import Components.*;
 public class BackOffice{
    public static void main (String[]args){
@@ -34,6 +34,7 @@ public class BackOffice{
             System.exit(1);
          }
       }
+      Shared.masterAccounts = sortInAscending(Shared.masterAccounts,0,Shared.masterAccounts.size());
       writeToFile(args[0],"Valid Accounts.txt");
    }
    
@@ -65,7 +66,7 @@ public class BackOffice{
    public static ArrayList<String[]> createArrayListFromFile(String filename){
       String currentLine = "";
       ArrayList <String[]> tempList = new ArrayList<String[]>();
-      //Reads in each line of a file and appends it to currentLine. To
+      //Reads in each line of a file and applasts it to currentLine. To
       //be separated into tokens for easier use
       
       try {
@@ -82,5 +83,29 @@ public class BackOffice{
          System.out.println(e);
       }
       return tempList;
+   }
+   
+   /* Sorts a given ArrayList. Given (as parameters) an ArrayList x, start index, and end index, return the sorted ArrayList x.
+   */
+   public static ArrayList<String[]> sortInAscending (ArrayList<String[]> accounts, int current, int last){
+	   if(current > last){
+         return accounts;
+      }
+      int next = current + 1;
+      int end = last;
+      //if we have finished moving the next largest value to the end, restart at the beginning
+      if(current == last - 1){
+         next = 0;
+         end--;
+      }else{
+         if(Integer.parseInt(accounts.get(current)[0]) > Integer.parseInt(accounts.get(current + 1)[0])){
+            //If current account number is greater than the next account number, swap
+            String[] temp = accounts.get(current);
+   			accounts.set(current, accounts.get(current + 1));
+   			accounts.set(current + 1, temp);
+         }
+      }
+      sortInAscending(accounts, next, end);
+      return accounts;
    }
 }
